@@ -121,9 +121,11 @@ git clone https://github.com/magach07/GoodHamburger
 
 # 9. Ficou de fora
 # Por limitação de tempo, algumas melhorias importantes não foram implementadas:
+- Autenticação: utilizando JWT Bearer Token
+- Pagamentos: integração com algum gateway de pagamento como Mercado Pago ou Pagar.me, que utilizam de webhook para o fluxo completo de pagamento online.
 - Tratamento de exceções: gostaria de ter implementado algo mais robusto e confiável, como um tratamento de excessões via middleware, padronizando as respostas e gerando logs para melhorar ainda mais a rastreabilidade de erros.
 - Testes mutantes: optei por testes unitários cobrindo as principais regras de negócio. Os testes mutantes seriam importantes para avaliar a efetividade desses mesmos testes, o que eleva significativamente a qualidade da aplicação.
-- Imagem do item na base de dados: em um contexto base de dados maior, como SQL Server, adicionaria um campo do tipo blob na tabela de items do cardápio (MenuItems) para que cada item tenha definida sua imagem diretamente em seu registro.
+- Imagem do armazenado em nuvem: em um outro contexto, salvaria as imagens de cada item em um container de armazenamento em nuvem como Bucket S3, da amazon, e salvaria na tabela de itens (MenuItem) o caminho do armazenamento. Outra opção mais simples seria de salvar imagem diretamente na base de dados no formato de Blob.
 
 # 10. Considerações finais
 - O projeto foi desenvolvido com foco em boas práticas de arquitetura, separação de responsabilidades e escalabilidade. Também tentei seguir ao máximo, como em todo desenvolvimento que faço, os conceitos do Clean Code e os princípios fundamentais do SOLID.
