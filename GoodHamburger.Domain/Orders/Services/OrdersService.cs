@@ -61,13 +61,7 @@ namespace GoodHamburger.Domain.Orders.Services
         {
             OrderSummaryDTO? orderSummary = await _ordersRepository.GetSummaryAsync(periodDays, cancellationToken);
 
-            orderSummary ??= new OrderSummaryDTO
-            {
-                TotalOrders = 0,
-                SubtotalAmount = 0,
-                TotalAmount = 0,
-                TotalDiscount = 0
-            };
+            orderSummary ??= new OrderSummaryDTO();
 
             return orderSummary;
         }

@@ -25,8 +25,8 @@ namespace GoodHamburger.Domain.OrderItems.Entitites
         }
 
         public virtual void SetMenuItem(MenuItem menuItem)
-        { 
-            IdMenuItem = menuItem.Id; 
+        {
+            IdMenuItem = menuItem.Id;
         }
     }
 }

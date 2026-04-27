@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GoodHamburger.DataTransfer.OrderItems.Responses
+﻿namespace GoodHamburger.DataTransfer.OrderItems.Responses
 {
     public class OrderItemMostSoldItemsRankingResponse
     {

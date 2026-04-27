@@ -15,4 +15,7 @@
   <Folder Name="/Frontend/">
     <Project Path="GoodHamburger.BlazorWASM/GoodHamburger.BlazorWASM.csproj" Id="0cf68b87-8c0d-4bed-92f3-b7e211c605f6" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
 </Solution>

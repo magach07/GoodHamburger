@@ -6,7 +6,7 @@ namespace GoodHamburger.Infrastructure.Orders.Configurations
 {
     public class OrdersConfiguration : IEntityTypeConfiguration<Order>
     {
-        public void Configure (EntityTypeBuilder<Order> entity)
+        public void Configure(EntityTypeBuilder<Order> entity)
         {
             entity.ToTable("Order");
             entity.HasKey(o => o.Id);

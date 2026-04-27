@@ -19,7 +19,7 @@ namespace GoodHamburger.Domain.Utils.Exceptions.Entities
 
         public static void ThrowDuplicatedItems<T>(this T entity, string typeOrItem, string name)
         {
-            if(entity is not null)
+            if (entity is not null)
                 throw new DuplicatedItemsException(typeOrItem, name);
         }
     }

@@ -1,5 +1,4 @@
-﻿using GoodHamburger.Domain.MenuItems.Entities;
-using GoodHamburger.Domain.OrderItems.DTOs;
+﻿using GoodHamburger.Domain.OrderItems.DTOs;
 using GoodHamburger.Domain.OrderItems.Entitites;
 
 namespace GoodHamburger.Domain.OrderItems.IRepositories

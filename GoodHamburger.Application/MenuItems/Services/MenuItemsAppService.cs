@@ -1,4 +1,5 @@
 ﻿using GoodHamburger.Application.MenuItems.Services.Interfaces;
+using GoodHamburger.Application.ResultPattern;
 using GoodHamburger.DataTransfer.MenuItems.Responses;
 using GoodHamburger.Domain.MenuItems.Entities;
 using GoodHamburger.Domain.MenuItems.Services.Interfaces;
@@ -15,31 +16,31 @@ namespace GoodHamburger.Application.MenuItems.Services
             _menuItemService = menuItemService;
         }
 
-        public async Task<IEnumerable<MenuItemResponse>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<AppResult<IEnumerable<MenuItemResponse>>> GetAllAsync(CancellationToken cancellationToken)
         {
             try
             {
                 IEnumerable<MenuItem> menuItems = await _menuItemService.GetAllAsync(cancellationToken);
 
-                return menuItems.Adapt<IEnumerable<MenuItemResponse>>();
+                return AppResult<IEnumerable<MenuItemResponse>>.Ok(menuItems.Adapt<IEnumerable<MenuItemResponse>>());
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<IEnumerable<MenuItemResponse>>.Fail(ex.Message);
             }
         }
 
-        public async Task<MenuItemResponse> GetByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<AppResult<MenuItemResponse>> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             try
             {
                 MenuItem menuItem = await _menuItemService.GetByIdAsync(id, cancellationToken);
 
-                return menuItem.Adapt<MenuItemResponse>();
+                return AppResult<MenuItemResponse>.Ok(menuItem.Adapt<MenuItemResponse>());
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<MenuItemResponse>.Fail(ex.Message);
             }
         }
     }

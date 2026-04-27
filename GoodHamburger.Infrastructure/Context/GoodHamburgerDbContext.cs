@@ -14,7 +14,7 @@ namespace GoodHamburger.Infrastructure.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<OrderStatus> OrdersStatus { get; set; }
-        public DbSet<MenuItemType> MenuItemsTypes{ get; set; }
+        public DbSet<MenuItemType> MenuItemsTypes { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
 

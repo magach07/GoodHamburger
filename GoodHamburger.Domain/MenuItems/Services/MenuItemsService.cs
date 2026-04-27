@@ -14,7 +14,7 @@ namespace GoodHamburger.Domain.MenuItems.Services
             _menuItemRepository = menuItemRepository;
         }
 
-        public async Task<IEnumerable<MenuItem>> GetAllAsync(CancellationToken cancellationToken) => 
+        public async Task<IEnumerable<MenuItem>> GetAllAsync(CancellationToken cancellationToken) =>
             await _menuItemRepository.GetAllAsync(cancellationToken);
 
         public async Task<MenuItem> GetByIdAsync(int id, CancellationToken cancellationToken)

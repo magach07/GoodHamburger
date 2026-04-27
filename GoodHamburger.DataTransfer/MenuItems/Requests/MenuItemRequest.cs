@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GoodHamburger.DataTransfer.MenuItems.Requests
+﻿namespace GoodHamburger.DataTransfer.MenuItems.Requests
 {
     public class MenuItemRequest
     {

@@ -27,7 +27,7 @@ namespace GoodHamburger.BlazorWASM.Orders.Services
             return await response.Content.ReadFromJsonAsync<bool>(cancellationToken);
         }
 
-        public async Task<ValidateOrderDto> ValidateAsync( OrderInsertRequest request, CancellationToken cancellationToken = default)
+        public async Task<ValidateOrderDto> ValidateAsync(OrderInsertRequest request, CancellationToken cancellationToken = default)
         {
             var response = await _httpClient.PostAsJsonAsync("api/orders/validate", request, cancellationToken);
 

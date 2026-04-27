@@ -1,5 +1,4 @@
 ﻿using GoodHamburger.DataTransfer.MenuItems.Responses;
-using GoodHamburger.DataTransfer.Orders.Responses;
 
 namespace GoodHamburger.DataTransfer.OrderItems.Responses
 {

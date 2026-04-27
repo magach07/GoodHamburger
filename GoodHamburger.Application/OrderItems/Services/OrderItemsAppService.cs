@@ -7,7 +7,7 @@ using Mapster;
 
 namespace GoodHamburger.Application.OrderItems.Services
 {
-    public class OrderItemsAppService (IOrderItemsService orderItemsService) : IOrderItemsAppService
+    public class OrderItemsAppService(IOrderItemsService orderItemsService) : IOrderItemsAppService
     {
         public async Task<IEnumerable<OrderItemResponse>> GetAllAsync(CancellationToken cancellationToken)
         {
@@ -16,7 +16,7 @@ namespace GoodHamburger.Application.OrderItems.Services
                 IEnumerable<OrderItem> orderItems = await orderItemsService.GetAllAsync(cancellationToken);
                 return orderItems.Adapt<IEnumerable<OrderItemResponse>>();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -29,7 +29,7 @@ namespace GoodHamburger.Application.OrderItems.Services
                 IEnumerable<OrderItemMostSoldItemsRankingDTO> mostSoldItems = await orderItemsService.GetMostSoldItemsAsync(cancellationToken);
                 return mostSoldItems.Adapt<IEnumerable<OrderItemMostSoldItemsRankingResponse>>();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }

@@ -1,5 +1,5 @@
-using Scalar.AspNetCore;
 using GoodHamburger.IoC;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

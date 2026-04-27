@@ -1,4 +1,5 @@
 ﻿using GoodHamburger.Application.Orders.Services.Interfaces;
+using GoodHamburger.Application.ResultPattern;
 using GoodHamburger.DataTransfer.MenuItems.Responses;
 using GoodHamburger.DataTransfer.Order.Requests;
 using GoodHamburger.DataTransfer.Orders.DTOs;
@@ -17,7 +18,7 @@ namespace GoodHamburger.Application.Orders.Services
     public class OrdersAppService : IOrdersAppService
     {
         private readonly IOrdersService _orderService;
-        private readonly IMenuItemsRepository _menuItemRepository; 
+        private readonly IMenuItemsRepository _menuItemRepository;
 
         public OrdersAppService(IOrdersService orderService, IMenuItemsRepository menuItemRepository)
         {
@@ -25,55 +26,69 @@ namespace GoodHamburger.Application.Orders.Services
             _menuItemRepository = menuItemRepository;
         }
 
-        public async Task<bool> ValidateAndInsertOrderAndItemsAsync(OrderInsertRequest request, CancellationToken cancellationToken)
+        public async Task<AppResult<bool>> ValidateAndInsertOrderAndItemsAsync(OrderInsertRequest request, CancellationToken cancellationToken)
         {
             List<OrderItemsQuantityInsertDTO> orderItemsQuantityDto = request.ItemsQuantityOrder.Adapt<List<OrderItemsQuantityInsertDTO>>();
 
             try
             {
-               _ = await ValidateDuplicatedItems(orderItemsQuantityDto, cancellationToken);
+                _ = await ValidateDuplicatedItems(orderItemsQuantityDto, cancellationToken);
 
-                IEnumerable<MenuItem> menuItemsOrder = await _menuItemRepository.GetByIdsAsync([..request.ItemsQuantityOrder.Select(it => it.Id)], cancellationToken);
+                IEnumerable<MenuItem> menuItemsOrder = await _menuItemRepository.GetByIdsAsync([.. request.ItemsQuantityOrder.Select(it => it.Id)], cancellationToken);
 
                 OrderInsertCommand command = new(request.CustomerName, menuItemsOrder);
 
-                return await _orderService.ValidateAndInsertOrderAndItemsAsync(command, cancellationToken);
+                return AppResult<bool>.Ok(await _orderService.ValidateAndInsertOrderAndItemsAsync(command, cancellationToken));
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<bool>.Fail(ex.Message);
             }
         }
 
-        public async Task<IEnumerable<OrderResponse>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<AppResult<IEnumerable<OrderResponse>>> GetAllAsync(CancellationToken cancellationToken)
         {
             try
             {
                 IEnumerable<Order> orders = await _orderService.GetAllAsync(cancellationToken);
 
-                return orders.Adapt<IEnumerable<OrderResponse>>();
+                return AppResult<IEnumerable<OrderResponse>>.Ok(orders.Adapt<IEnumerable<OrderResponse>>());
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<IEnumerable<OrderResponse>>.Fail(ex.Message);
             }
         }
 
-        public async Task<OrderSummaryResponse> GetSummaryAsync(int periodDays, CancellationToken cancellationToken)
-        {       
-            OrderSummaryDTO? orderSummary = await _orderService.GetSummaryAsync(periodDays, cancellationToken);
-
-            return orderSummary!.Adapt<OrderSummaryResponse>();
-        }
-
-        public async Task<OrderResponse> SoftDeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task<AppResult<OrderSummaryResponse>> GetSummaryAsync(int periodDays, CancellationToken cancellationToken)
         {
-            Order order = await _orderService.SoftDeleteAsync(id, cancellationToken);
+            try
+            {
+                OrderSummaryDTO? orderSummary = await _orderService.GetSummaryAsync(periodDays, cancellationToken);
 
-            return order.Adapt<OrderResponse>();
+                return AppResult<OrderSummaryResponse>.Ok(orderSummary!.Adapt<OrderSummaryResponse>());
+            }
+            catch (Exception ex)
+            {
+                return AppResult<OrderSummaryResponse>.Fail(ex.Message);
+            }
         }
 
-        public async Task<ValidateOrderDto> ValidateOrderAndCalculateDiscount(OrderInsertRequest request, CancellationToken cancellationToken)
+        public async Task<AppResult<OrderResponse>> SoftDeleteAsync(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                Order order = await _orderService.SoftDeleteAsync(id, cancellationToken);
+
+                return AppResult<OrderResponse>.Ok(order.Adapt<OrderResponse>());
+            }
+            catch (Exception ex)
+            {
+                return AppResult<OrderResponse>.Fail(ex.Message);
+            }
+        }
+
+        public async Task<AppResult<ValidateOrderDto>> ValidateOrderAndCalculateDiscount(OrderInsertRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -87,27 +102,28 @@ namespace GoodHamburger.Application.Orders.Services
 
                 Order order = await _orderService.ValidateOrderAsync(command, cancellationToken);
 
-                return new ValidateOrderDto(order.Adapt<OrderResponse>(), menuItemsOrder.Adapt<IEnumerable<MenuItemResponse>>());
+                return AppResult<ValidateOrderDto>.Ok(new ValidateOrderDto(order.Adapt<OrderResponse>(), menuItemsOrder.Adapt<IEnumerable<MenuItemResponse>>()));
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<ValidateOrderDto>.Fail(ex.Message);
             }
         }
 
-        public async Task<bool> InsertOrderAndItemsAsync(ValidateOrderDto orderDto, CancellationToken cancellationToken)
+        public async Task<AppResult<bool>> InsertOrderAndItemsAsync(ValidateOrderDto orderDto, CancellationToken cancellationToken)
         {
             try
             {
                 ValidatedOrderCommand command = orderDto.Adapt<ValidatedOrderCommand>();
-                return await _orderService.InsertOrderAndItemsAsync(command, cancellationToken);
+                return AppResult<bool>.Ok(await _orderService.InsertOrderAndItemsAsync(command, cancellationToken));
             }
-            catch(Exception)
+            catch (Exception ex)
             {
-                throw;
+                return AppResult<bool>.Fail(ex.Message);
             }
         }
 
+        #region Duplicated items/types validator
         private async Task<bool> ValidateDuplicatedItems(List<OrderItemsQuantityInsertDTO> orderItemsQuantityDto, CancellationToken cancellationToken)
         {
             List<int> duplicatedItens = _orderService.ValidateItems(orderItemsQuantityDto);
@@ -142,5 +158,6 @@ namespace GoodHamburger.Application.Orders.Services
 
             return true;
         }
+        #endregion
     }
 }

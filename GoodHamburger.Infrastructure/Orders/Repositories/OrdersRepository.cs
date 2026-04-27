@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoodHamburger.Infrastructure.Orders.Repositories
 {
-    public class OrdersRepository (GoodHamburgerDbContext context) : IOrdersRepository
+    public class OrdersRepository(GoodHamburgerDbContext context) : IOrdersRepository
     {
 
         public async Task<Order?> InsertAsync(Order order, CancellationToken cancellationToken)
