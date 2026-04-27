@@ -54,18 +54,18 @@ Além disso, o coração do sistema proposto são as regras de negócio o que to
 # 6.2 Passo a passo
 
 # 6.2.2 No Visual Studio
-- 1. Clone o repositório
+1. Clone o repositório
 git clone https://github.com/magach07/GoodHamburger
 
-- 2. Configure múltiplos projetos de inicialização. Selecione:
-1. GoodHamburger.WebApi
-2. GoodHamburger.BlazorWASM
+2. Configure múltiplos projetos de inicialização. Selecione:
+- 1. GoodHamburger.WebApi
+- 2. GoodHamburger.BlazorWASM
 
-- 3. Execute o projeto usando IIS Express
+3. Execute o projeto usando IIS Express
 
-- 4. Se as páginas não abrirem automaticamente
-1. Backend: https://localhost:44391/scalar/
-2. Frontend: https://localhost:7180/
+4. Se as páginas não abrirem automaticamente
+- 1. Backend: https://localhost:44391/scalar/
+- 2. Frontend: https://localhost:7180/
 
 # 7. Telas do Usuário
 
