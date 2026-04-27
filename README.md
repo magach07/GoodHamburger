@@ -51,6 +51,8 @@ Além disso, o coração do sistema proposto são as regras de negócio o que to
 - .NET 10 SDK (ou versão compatível instalada)
 - Visual Studio 2022+ (preferencialmente) ou VS Code
 
+- Obs: A utilização do SQLite faz com que não seja necessária nenhuma configuração para a base de dados.
+
 # 6.2 Passo a passo
 
 # 6.2.2 No Visual Studio
@@ -120,7 +122,6 @@ git clone https://github.com/magach07/GoodHamburger
 - (GET) api/menu-items/{id}: recupera um item do cardápio pelo seu id.
 
 # 9. Ficou de fora
-# Por limitação de tempo, algumas melhorias importantes não foram implementadas:
 - Autenticação: utilizando JWT Bearer Token
 - Pagamentos: integração com algum gateway de pagamento como Mercado Pago ou Pagar.me, que utilizam de webhook para o fluxo completo de pagamento online.
 - Tratamento de exceções: gostaria de ter implementado algo mais robusto e confiável, como um tratamento de excessões via middleware, padronizando as respostas e gerando logs para melhorar ainda mais a rastreabilidade de erros.
