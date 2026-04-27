@@ -1,0 +1,30 @@
+﻿@using GoodHamburger.BlazorWASM.Orders.Services
+@using GoodHamburger.DataTransfer.Orders.Responses
+
+@page "/orders"
+@inject OrderService OrderService
+
+<h3>Orders</h3>
+
+@if (!orders.Any())
+{
+    <p>Nenhum pedido encontrado</p>
+}
+else
+{
+    <ul>
+        @foreach(var order in orders)
+        {
+            <li>@order.CustomerName - @order.TotalAmount - @order.CreatedAt</li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<OrderResponse>? orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetAllAsync(CancellationToken.None);
+    }
+}

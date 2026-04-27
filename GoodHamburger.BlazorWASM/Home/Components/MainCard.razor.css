@@ -1,0 +1,23 @@
+﻿.main-card {
+    background-color: #F0F4FE;
+}
+
+.order-filter {
+    border: 1px solid #000000;
+    border-radius: 15px;
+    font-size: 10px;
+    background-color: #E2E3E4;
+}
+
+.card-information {
+    border: 1px solid #000000;
+    background-color: #FFFFFF;
+    padding: 10px 10px;
+    font-size: 12px;
+}
+
+.active-filter {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}

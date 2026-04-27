@@ -1,0 +1,16 @@
+﻿.w-90 {
+    width: 90%;
+    border-radius:50px;
+}
+
+.btn-submit-order, .btn-clean-order {
+    border-radius: 10px;
+    height: 6%;
+    background-color: #D32627;
+    border-color: #D32627;
+    color: #FFFFFF;
+}
+
+.btn-submit-order:hover, .btn-clean-order:hover {
+    background-color: #FF9999;
+}

@@ -1,0 +1,12 @@
+﻿.card-img-top {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    margin-inline: auto;
+}
+
+.icon-place {
+    font-size:22px;
+}

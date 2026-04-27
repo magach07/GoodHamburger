@@ -1,0 +1,129 @@
+﻿@using GoodHamburger.BlazorWASM.Orders.Services
+@using GoodHamburger.DataTransfer.MenuItems.Responses
+@using GoodHamburger.DataTransfer.Order.Requests
+@using GoodHamburger.DataTransfer.Orders.DTOs
+@using GoodHamburger.DataTransfer.Orders.Requests
+
+@inject OrderService OrderService;
+
+<div class="card shadow-md mb-2 h-100">
+    <div class="order-items my-2 mx-3">
+        <label class="form-label fw-bold">3. Itens Selecionados</label>
+    </div>
+    @foreach (MenuItemResponse item in Items)
+    {
+    <div class="shadown-sm mx-2">
+        <div class="order-item d-flex align-items-center justify-content-between mb-2 p-2">
+                
+            <div class="item-image">
+                <img src="@(GetImagePath(@item.Name))" class="image-item-selected" alt="X-Burger" />
+            </div>
+            <div class="item-name">
+                @item.Name
+            </div>
+            <div class="item-price">
+                @item.Price.ToString("C")
+            </div>
+            <div class="items-quantity-plus d-flex align-items-center">
+                    <button class="btn-sm btn-light btn-quantity" @onclick ="() => ControllerItemsQuantity(item ,false)">-</button>
+                    <span>@item.Quantity</span>
+                    <button class="btn-sm btn-light btn-quantity" @onclick="() => ControllerItemsQuantity(item, true)">+</button>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" @onclick="() => RemoveItem(item)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </div>
+    }
+    @if(Items.Count() > 0)
+    {
+        <div class="confirm-items-order mx-2 mt-3">
+            <button type="button" class="new-order-button w-100" @onclick="() => BuildOrderValidatePayload(Items)">
+                Confirmar itens e calcular valores
+            </button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mx-2 mt-3">
+            @errorMessage
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<MenuItemResponse>? Items { get; set; }
+    [Parameter] public EventCallback<MenuItemResponse> OnRemove { get; set; }
+    [Parameter] public EventCallback<bool> OnConfirmOrder { get; set; }
+    [Parameter] public EventCallback<ValidateOrderDto> OnValidateOrder { get; set; }
+    [Parameter] public string CustomerName { get; set; } = string.Empty;
+
+    private OrderInsertRequest orderInsertRequest = new OrderInsertRequest();
+    private string? errorMessage;
+    private ValidateOrderDto? validateOrder;
+
+    private string GetImagePath(string itemName)
+    {
+        return itemName.ToUpper() switch
+        {
+            "X BURGER" => "images/x-burger.png",
+            "X EGG" => "images/x-egg.png",
+            "X BACON" => "images/x-bacon.png",
+            "BATATA FRITA" => "images/batata-frita.png",
+            "REFRIGERANTE" => "images/refrigerante.png",
+            _ => "images/notfound.png"
+        };
+    }
+
+    private void ControllerItemsQuantity(MenuItemResponse item, bool increment)
+    {
+        if (increment)
+            item.Quantity++;
+        else if (item.Quantity > 1)
+            item.Quantity--;
+
+        Console.WriteLine($"Id: {item.Id} | Nome: {item.Name} | Qnt: {item.Quantity}");
+    }
+
+    private async Task RemoveItem(MenuItemResponse item)
+    {
+        await OnRemove.InvokeAsync(item);
+    }
+
+    private async Task BuildOrderValidatePayload(List<MenuItemResponse> selectedItems)
+    {
+        var isValid = !string.IsNullOrWhiteSpace(CustomerName);
+
+        await OnConfirmOrder.InvokeAsync(isValid);
+
+        if (!isValid)
+            return;
+
+        orderInsertRequest!.CustomerName = CustomerName;
+
+        orderInsertRequest!.ItemsQuantityOrder = selectedItems
+        .Select(item => new OrderItemsQuantityInsertRequest
+        {
+            Id = item.Id,
+            Quantity = item.Quantity
+        })
+        .ToList();
+
+        await ValidateOrderAsync();
+    }
+
+    private async Task ValidateOrderAsync()
+    {
+        try
+        {
+            validateOrder = await OrderService.ValidateAsync(orderInsertRequest, CancellationToken.None);
+            errorMessage = null;
+            await OnValidateOrder.InvokeAsync(validateOrder);
+        }
+        catch(Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

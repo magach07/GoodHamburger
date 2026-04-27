@@ -1,0 +1,89 @@
+﻿@using GoodHamburger.BlazorWASM.MenuItems.Services
+@using GoodHamburger.BlazorWASM.Shared.Enumerators
+@using GoodHamburger.DataTransfer.MenuItems.Responses
+
+@inject MenuItemService MenuItemService;
+
+@if (menuItems == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <div class="card shadow-md mb-2">
+        <div class="order-items my-2 mx-3">
+            <label class="form-label fw-bold">2. Itens do Pedido</label>
+        </div>
+        <div class="d-flex gap-2 flex-wrap order-filters mb-2 mx-3">
+            <button type="button"
+                    class="item-filter @(selectedFilter == OrderItemsMenuItemTypeFilterEnum.All ? "active-filter" : "")"
+                    @onclick="() => SelectFilter(OrderItemsMenuItemTypeFilterEnum.All)">
+                Todos
+            </button>
+            <button type="button"
+                    class="item-filter @(selectedFilter == OrderItemsMenuItemTypeFilterEnum.Sandwichs ? "active-filter" : "")"
+                    @onclick="() => SelectFilter(OrderItemsMenuItemTypeFilterEnum.Sandwichs)">
+                Sanduíches
+            </button>
+            <button type="button"
+                    class="item-filter @(selectedFilter == OrderItemsMenuItemTypeFilterEnum.Sides ? "active-filter" : "")"
+                    @onclick="() => SelectFilter(OrderItemsMenuItemTypeFilterEnum.Sides)">
+                Acompanhamentos
+            </button>
+        </div>
+        <div class="row mx-2">
+            @foreach (MenuItemResponse menuItem in menuItems)
+            {
+                <div class="col-4 my-3">
+                    <div class="card shadow-sm">
+                        <img src="@(GetImagePath(@menuItem!.Name))" class="card-img-top" alt="X-Burger" />
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <input type="checkbox"
+                                       checked="@SelectedItems.Any(x => x.Id == menuItem.Id)"
+                                       @onchange="() => OnItemChanged.InvokeAsync(menuItem)" />
+                                <h6 class="card-title mb-0">@menuItem.Name</h6>
+                            </div>
+                            <h6 class="card-price">@menuItem.Price.ToString("C")</h6>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public List<MenuItemResponse> SelectedItems { get; set; } = [];
+    [Parameter] public EventCallback<MenuItemResponse> OnItemChanged { get; set; }
+
+    private OrderItemsMenuItemTypeFilterEnum selectedFilter = OrderItemsMenuItemTypeFilterEnum.All;
+    private IEnumerable<MenuItemResponse>? menuItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SelectFilter(selectedFilter);
+        await GetAllAsync(CancellationToken.None);
+    }
+
+    private async Task SelectFilter(OrderItemsMenuItemTypeFilterEnum filter)
+    {
+        selectedFilter = filter;
+    }
+
+    private async Task GetAllAsync(CancellationToken cancellationToken) =>
+        menuItems = await MenuItemService.GetAllAsync(cancellationToken);
+
+    private string GetImagePath(string itemName)
+    {
+        return itemName.ToUpper() switch
+        {
+            "X BURGER" => "images/x-burger.png",
+            "X EGG" => "images/x-egg.png",
+            "X BACON" => "images/x-bacon.png",
+            "BATATA FRITA" => "images/batata-frita.png",
+            "REFRIGERANTE" => "images/refrigerante.png",
+            _ => "images/notfound.png"
+        };
+    }
+}

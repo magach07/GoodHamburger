@@ -1,0 +1,76 @@
+﻿@using GoodHamburger.BlazorWASM.Orders.Services
+@using GoodHamburger.DataTransfer.Orders.Responses
+
+@inject OrderService OrderService
+
+@if (orders == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <span class="fw-bold h5 d-flex">
+        Pedidos
+    </span>
+    <div class="card shadow-sm last-orders-card mt-2">
+        <div class="table-scroll">
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>N° Pedido</th>
+                    <th>Cliente</th>
+                    <th>Itens</th>
+                    <th>Valor Total</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (OrderResponse order in orders!)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.CustomerName</td>
+                        <td>@GetOrderItemsDescription(@order)</td>
+                        <td>@order.TotalAmount.ToString("C")</td>
+                        <td>
+                            <span class="status-dot @GetStatusClass(@order.OrderStatus.Description)"></span>
+                            @order.OrderStatus.Description
+                        </td>
+                        <td>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+}
+
+@code {
+
+    private IEnumerable<OrderResponse>? orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetAllAsync(CancellationToken.None);
+        Console.WriteLine(orders);
+    }
+
+    private static string GetOrderItemsDescription(OrderResponse orderResponse)
+    {
+        return string.Join(" + ", orderResponse.OrderItems.Select(oi => oi.MenuItem.Name));
+    }
+
+    private string GetStatusClass(string statusDescription)
+    {
+        return statusDescription.ToUpper() switch
+        {
+            "SOLICITADO" => "bg-warning",
+            "FINALIZADO" => "bg-success",
+            "CANCELADO" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+

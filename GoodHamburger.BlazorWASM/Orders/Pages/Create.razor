@@ -1,0 +1,64 @@
+﻿@page "/orders/create"
+@using GoodHamburger.BlazorWASM.Orders.Components
+@using GoodHamburger.DataTransfer.MenuItems.Responses
+@using GoodHamburger.DataTransfer.Orders.DTOs
+
+
+<h3>Novo Pedido</h3>
+<div class="py-4">
+    <div class="row text-start">
+        <div class="col-5">
+            <div class="card shadow-md mb-2">
+                <div class="customer-name my-3 mx-3">
+                    <label class="form-label fw-bold">1. Cliente</label>
+                    <input type="text" class="form-control" @bind="customerName" placeholder="Digite o nome do cliente" />
+
+                    @if (hasError)
+                    {
+                        <div class="text-danger">Informe o nome do cliente</div>
+                    }
+                </div>
+            </div>
+            <OrderItemsOrderCreate SelectedItems="selectedItems" OnItemChanged="HandleItemChanged" />
+        </div>
+        <div class="col-4">
+            <SelectedItemsOrderCreate Items="selectedItems" OnRemove="HandleItemChanged" OnConfirmOrder="HandleSubmitResult" OnValidateOrder="HandleValidatedOrder" CustomerName="@customerName" />
+        </div>
+        <div class="col-3">
+            <OrderSummaryOrderCreate ValidatedOrder="ValidatedOrder" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string customerName = string.Empty;
+    private List<MenuItemResponse> selectedItems = [];
+    private bool hasError;
+    private ValidateOrderDto? ValidatedOrder;
+
+    private void HandleItemChanged(MenuItemResponse item)
+    {
+        var alreadySelected = selectedItems.Any(x => x.Id == item.Id);
+
+        if (alreadySelected)
+            selectedItems.RemoveAll(x => x.Id == item.Id);
+        else
+            selectedItems.Add(item);
+
+        foreach (var teste in selectedItems)
+        {
+            Console.WriteLine($"{teste.Id} - {teste.Name}");
+        }
+    }
+
+    private void HandleSubmitResult(bool isValid)
+    {
+        hasError = !isValid;
+    }
+
+    private void HandleValidatedOrder(ValidateOrderDto validateOrder)
+    {
+        ValidatedOrder = validateOrder;
+        Console.WriteLine(ValidatedOrder);
+    }
+}

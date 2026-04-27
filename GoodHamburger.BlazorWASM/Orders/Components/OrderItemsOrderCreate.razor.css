@@ -1,0 +1,31 @@
+﻿.item-filter {
+    border: 1px solid #000000;
+    border-radius: 15px;
+    font-size: 15px;
+}
+
+.active-filter {
+    background-color: #D32627;
+    color: white;
+    border-color: #D32627;
+}
+
+.card-img-top {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    margin-inline: auto;
+}
+
+.btn-add {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #D32627;
+}

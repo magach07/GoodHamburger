@@ -1,0 +1,68 @@
+﻿@page "/"
+
+@using GoodHamburger.BlazorWASM.Home.Components
+@using GoodHamburger.BlazorWASM.OrderItems.Services
+@using GoodHamburger.DataTransfer.OrderItems.Responses
+
+@inject OrderItemService OrderItemsService;
+@inject NavigationManager Navigation
+
+@if (mostSoldItemsList == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <PageTitle>Good Hamburger</PageTitle>
+    <h3>Bem-vindo ao Good Hamburger</h3>
+    <div class="py-4">
+        <div class="row text-center">
+            <div class="col-3">
+                <MainCard />
+                <div class="new-order mt-3">
+                    <button type="button" class="new-order-button w-100" @onclick="GoToCreateOrder">
+                        Novo Pedido
+                    </button>
+                </div>
+            </div>
+            <div class="col-9">
+                <OrderList />
+                <div class="mt-4">
+                    <span class="fw-bold h5 d-flex">
+                        Os mais vendidos
+                    </span>
+                    <div class="card shadow-sm last-orders-card mt-2 p-2">
+                        <div class="row row-cols-5 g-2">
+                            @for (int i = 0; i < mostSoldItemsList?.Count(); i++)
+                            {
+                                <MenuItemsRanking ItemRanking="@mostSoldItemsList[i]"
+                                                  Index="@(i + 1)" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private IEnumerable<OrderItemMostSoldItemsRankingResponse>? mostSoldItems;
+    private List<OrderItemMostSoldItemsRankingResponse>? mostSoldItemsList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetMostSoldItemsAsync(CancellationToken.None);
+    }
+
+    private async Task GetMostSoldItemsAsync(CancellationToken cancellationToken)
+    {
+        mostSoldItems = await OrderItemsService.GetMostSoldItemsAsync(cancellationToken);
+        mostSoldItemsList = mostSoldItems.ToList();
+    }
+
+    private void GoToCreateOrder()
+    {
+        Navigation.NavigateTo("/orders/create");
+    }
+}

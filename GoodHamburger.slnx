@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="GoodHamburger.Application/GoodHamburger.Application.csproj" />
+    <Project Path="GoodHamburger.DataTransfer/GoodHamburger.DataTransfer.csproj" />
+    <Project Path="GoodHamburger.Domain/GoodHamburger.Domain.csproj" />
+    <Project Path="GoodHamburger.Infrastructure/GoodHamburger.Infrastructure.csproj" />
+    <Project Path="GoodHamburger.IoC/GoodHamburger.IoC.csproj" />
+  </Folder>
+  <Folder Name="/Backend/Tests/">
+    <Project Path="GoodHamburger.Tests/GoodHamburger.Tests.csproj" Id="9f2ef7e0-d654-4268-8c24-d44373325238" />
+  </Folder>
+  <Folder Name="/Backend/WebApi/">
+    <Project Path="GoodHamburger.API/GoodHamburger.API.csproj" />
+  </Folder>
+  <Folder Name="/Frontend/">
+    <Project Path="GoodHamburger.BlazorWASM/GoodHamburger.BlazorWASM.csproj" Id="0cf68b87-8c0d-4bed-92f3-b7e211c605f6" />
+  </Folder>
+</Solution>

@@ -1,0 +1,34 @@
+﻿@using GoodHamburger.BlazorWASM.OrderItems.Services
+@using GoodHamburger.DataTransfer.OrderItems.Responses
+
+@inject OrderItemService OrderItemsService;
+
+<div class="col">
+    <div class="text-center my-1">
+        <i class="bi bi-@($"{Index}")-circle-fill icon-place"></i>
+    </div>
+    <div class="card shadow-sm">
+        <img src="@(GetImagePath(@ItemRanking!.NameItem))" class="card-img-top" alt="@ItemRanking.NameItem" />
+        <div class="card-body text-center">
+            <h6 class="card-title">@ItemRanking.NameItem</h6>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public OrderItemMostSoldItemsRankingResponse? ItemRanking { get; set; }
+    [Parameter] public int Index { get; set; }
+
+    private string GetImagePath(string itemName)
+    {
+        return itemName.ToUpper() switch
+        {
+            "X BURGER" => "images/x-burger.png",
+            "X EGG" => "images/x-egg.png",
+            "X BACON" => "images/x-bacon.png",
+            "BATATA FRITA" => "images/batata-frita.png",
+            "REFRIGERANTE" => "images/refrigerante.png",
+            _ => "images/notfound.png"
+        };
+    }
+}
